@@ -1067,3 +1067,113 @@ print("\nMATRIZ DE CONFUSÃO")
 print("--------------------------------")
 print(matriz_baseline)
 # %%
+
+
+
+
+
+# %% MISSÃO 11 - BASELINE COM REGRESSÃO LOGÍSTICA
+
+from sklearn.linear_model import LogisticRegression
+
+modelo_logistico = LogisticRegression(
+    max_iter=3000,
+    class_weight="balanced",
+    random_state=42
+)
+
+
+modelo_logistico.fit(
+    X_treino_preparado,
+    y_treino
+)
+
+
+previsoes_logistico = modelo_logistico.predict(
+    X_validacao_preparado
+)
+
+
+acuracia_logistico = accuracy_score(
+    y_validacao,
+    previsoes_logistico
+)
+
+acuracia_balanceada_logistico = balanced_accuracy_score(
+    y_validacao,
+    previsoes_logistico
+)
+
+f1_macro_logistico = f1_score(
+    y_validacao,
+    previsoes_logistico,
+    average="macro",
+    zero_division=0
+)
+
+print("\nRESULTADOS DA REGRESSÃO LOGÍSTICA")
+print("--------------------------------")
+
+print(f"Acurácia: {acuracia_logistico:.4f}")
+print(
+    "Acurácia balanceada: "
+    f"{acuracia_balanceada_logistico:.4f}"
+)
+print(f"F1-macro: {f1_macro_logistico:.4f}")
+
+
+
+comparacao_baselines = pd.DataFrame(
+    {
+        "Dummy": {
+            "Acurácia": acuracia_baseline,
+            "Acurácia balanceada": acuracia_balanceada_baseline,
+            "F1-macro": f1_macro_baseline
+        },
+        "Regressão logística": {
+            "Acurácia": acuracia_logistico,
+            "Acurácia balanceada": acuracia_balanceada_logistico,
+            "F1-macro": f1_macro_logistico
+        }
+    }
+).T
+
+print("\nCOMPARAÇÃO DOS BASELINES")
+print("--------------------------------")
+print(comparacao_baselines.round(4))
+
+
+print("\nRELATÓRIO DA REGRESSÃO LOGÍSTICA")
+print("--------------------------------")
+
+print(
+    classification_report(
+        y_validacao,
+        previsoes_logistico,
+        zero_division=0
+    )
+)
+
+
+classes_logistico = modelo_logistico.classes_
+
+matriz_logistico = pd.DataFrame(
+    confusion_matrix(
+        y_validacao,
+        previsoes_logistico,
+        labels=classes_logistico
+    ),
+    index=[
+        f"Real: {classe}"
+        for classe in classes_logistico
+    ],
+    columns=[
+        f"Previsto: {classe}"
+        for classe in classes_logistico
+    ]
+)
+
+print("\nMATRIZ DE CONFUSÃO")
+print("--------------------------------")
+print(matriz_logistico)
+# %%
