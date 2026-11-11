@@ -990,3 +990,80 @@ print("\nMissão 9 concluída: entradas preparadas corretamente.")
 
 
 # %%
+
+
+# %% MISSÃO 10 - BASELINE DA CLASSE MAIS FREQUENTE
+
+from sklearn.dummy import DummyClassifier
+
+from sklearn.metrics import (
+    accuracy_score,
+    balanced_accuracy_score,
+    f1_score,
+    classification_report,
+    confusion_matrix
+)
+
+
+modelo_baseline = DummyClassifier(
+    strategy="most_frequent"
+)
+
+modelo_baseline.fit(
+    X_treino_preparado,
+    y_treino
+)
+
+
+previsoes_baseline = modelo_baseline.predict(
+    X_validacao_preparado
+)
+
+print("Primeiras previsões:")
+print(previsoes_baseline[:10])
+
+
+acuracia_baseline = accuracy_score(
+    y_validacao,
+    previsoes_baseline
+)
+
+acuracia_balanceada_baseline = balanced_accuracy_score(
+    y_validacao,
+    previsoes_baseline
+)
+
+f1_macro_baseline = f1_score(
+    y_validacao,
+    previsoes_baseline,
+    average="macro",
+    zero_division=0
+)
+
+print("\nRESULTADOS DO BASELINE")
+print("--------------------------------")
+
+print(f"Acurácia: {acuracia_baseline:.4f}")
+print(
+    "Acurácia balanceada: "
+    f"{acuracia_balanceada_baseline:.4f}"
+)
+print(f"F1-macro: {f1_macro_baseline:.4f}")
+
+
+classes = modelo_baseline.classes_
+
+matriz_baseline = pd.DataFrame(
+    confusion_matrix(
+        y_validacao,
+        previsoes_baseline,
+        labels=classes
+    ),
+    index=[f"Real: {classe}" for classe in classes],
+    columns=[f"Previsto: {classe}" for classe in classes]
+)
+
+print("\nMATRIZ DE CONFUSÃO")
+print("--------------------------------")
+print(matriz_baseline)
+# %%
