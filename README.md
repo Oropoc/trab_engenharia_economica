@@ -1,2 +1,2 @@
-# trab_engenharia_economica
+# trab_IA
 bora lah man
