@@ -304,5 +304,119 @@ print(f"\nResultados salvos em: {arquivo_resultados}")
 
 # %% MISSÃO 12 - PRIMEIRA REDE NEURAL MLP
 
-# A MLP será implementada no próximo passo.
-# O conjunto X_teste_preparado continuará reservado até a escolha final do modelo.
+from sklearn.neural_network import MLPClassifier
+
+
+
+modelo_mlp_inicial = MLPClassifier(
+    hidden_layer_sizes=(32,),
+    activation="relu",
+    solver="adam",
+    alpha=0.0001,
+    batch_size=64,
+    learning_rate_init=0.001,
+    max_iter=500,
+    early_stopping=True,
+    validation_fraction=0.15,
+    n_iter_no_change=25,
+    random_state=42
+)
+
+
+modelo_mlp_inicial.fit(
+    X_treino_preparado,
+    y_treino
+)
+
+
+print("\nINFORMAÇÕES DO TREINAMENTO")
+print("--------------------------------")
+
+print(
+    "Épocas executadas:",
+    modelo_mlp_inicial.n_iter_
+)
+
+print(
+    "Valor final da função de perda:",
+    round(modelo_mlp_inicial.loss_, 4)
+)
+
+print(
+    "Melhor acurácia na validação interna:",
+    round(
+        max(modelo_mlp_inicial.validation_scores_),
+        4
+    )
+)
+
+
+
+previsoes_mlp = modelo_mlp_inicial.predict(
+    X_validacao_preparado
+)
+
+acuracia_mlp = accuracy_score(
+    y_validacao,
+    previsoes_mlp
+)
+
+acuracia_balanceada_mlp = balanced_accuracy_score(
+    y_validacao,
+    previsoes_mlp
+)
+
+f1_macro_mlp = f1_score(
+    y_validacao,
+    previsoes_mlp,
+    average="macro",
+    zero_division=0
+)
+
+print("\nRESULTADOS DA MLP INICIAL")
+print("--------------------------------")
+
+print(f"Acurácia: {acuracia_mlp:.4f}")
+print(
+    "Acurácia balanceada: "
+    f"{acuracia_balanceada_mlp:.4f}"
+)
+print(f"F1-macro: {f1_macro_mlp:.4f}")
+
+
+
+comparacao_modelos = pd.DataFrame(
+    {
+        "Dummy": {
+            "Acurácia": acuracia_baseline,
+            "Acurácia balanceada": acuracia_balanceada_baseline,
+            "F1-macro": f1_macro_baseline
+        },
+        "Regressão logística balanceada": {
+            "Acurácia": acuracia_logistico,
+            "Acurácia balanceada": acuracia_balanceada_logistico,
+            "F1-macro": f1_macro_logistico
+        },
+        "MLP inicial": {
+            "Acurácia": acuracia_mlp,
+            "Acurácia balanceada": acuracia_balanceada_mlp,
+            "F1-macro": f1_macro_mlp
+        }
+    }
+).T
+
+print("\nCOMPARAÇÃO DOS MODELOS")
+print("--------------------------------")
+print(comparacao_modelos.round(4))
+
+
+print("\nRELATÓRIO DA MLP INICIAL")
+print("--------------------------------")
+
+print(
+    classification_report(
+        y_validacao,
+        previsoes_mlp,
+        zero_division=0
+    )
+)
