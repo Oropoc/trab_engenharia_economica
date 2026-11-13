@@ -1,0 +1,5 @@
+﻿modelo,f1_macro_cv_treino,f1_macro_teste,diferenca_cv_teste,acuracia_teste,acuracia_balanceada_teste,melhores_parametros
+Random Forest,0.35102344621424836,0.3987607882409651,-0.047737342026716756,0.5141242937853108,0.4594469540121714,"{'modelo__max_depth': None, 'modelo__min_samples_leaf': 2, 'modelo__n_estimators': 150}"
+Regressão logística,0.28454389393791096,0.3077842729564574,-0.02324037901854642,0.3638418079096045,0.41897258734973597,{'modelo__C': 0.1}
+Dummy (classe mais frequente),0.20250714320950688,0.20242098184263618,8.616136687070175e-05,0.6802259887005649,0.25,sem ajuste
+MLP,0.20235685172816573,0.20242098184263618,-6.413011447045647e-05,0.6802259887005649,0.25,"{'modelo__alpha': 0.001, 'modelo__hidden_layer_sizes': (32,)}"

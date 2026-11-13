@@ -58,7 +58,7 @@ if df["data_dt"].isna().any():
 
 df["ano_data"] = df["data_dt"].dt.year
 df["mes_data"] = df["data_dt"].dt.month
-df["dia_semana_data"] = df["data_dt"].dt.dayofweek
+df["dia_semana_data"] = df["data_dt"].dt.day_of_week
 
 colunas_entrada = [
     "ano_data",
@@ -384,31 +384,23 @@ print(
 print(f"F1-macro: {f1_macro_mlp:.4f}")
 
 
+metricas_mlp = {
+    "Acurácia": acuracia_mlp,
+    "Acurácia balanceada": acuracia_balanceada_mlp,
+    "F1-macro": f1_macro_mlp,
+}
 
 comparacao_modelos = pd.DataFrame(
     {
-        "Dummy": {
-            "Acurácia": acuracia_baseline,
-            "Acurácia balanceada": acuracia_balanceada_baseline,
-            "F1-macro": f1_macro_baseline
-        },
-        "Regressão logística balanceada": {
-            "Acurácia": acuracia_logistico,
-            "Acurácia balanceada": acuracia_balanceada_logistico,
-            "F1-macro": f1_macro_logistico
-        },
-        "MLP inicial": {
-            "Acurácia": acuracia_mlp,
-            "Acurácia balanceada": acuracia_balanceada_mlp,
-            "F1-macro": f1_macro_mlp
-        }
+        "Dummy": metricas_dummy,
+        "Regressão logística balanceada": metricas_logistico,
+        "MLP inicial": metricas_mlp,
     }
 ).T
 
-print("\nCOMPARAÇÃO DOS MODELOS")
+print("\nCOMPARAÇÃO FINAL DOS MODELOS")
 print("--------------------------------")
-print(comparacao_modelos.round(4))
-
+print(comparacao_modelos.round(4).to_string())
 
 print("\nRELATÓRIO DA MLP INICIAL")
 print("--------------------------------")
